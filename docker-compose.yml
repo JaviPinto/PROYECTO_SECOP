@@ -1,0 +1,229 @@
+services:
+
+  grafica-1:
+    build: .
+    container_name: secop-grafica-1
+    restart: "no"
+    command: python scripts/pregunta_1.py
+    depends_on:
+      - dask-scheduler
+      - dask-worker-1
+      - dask-worker-2
+      - dask-worker-3
+    volumes:
+      - datos:/datos
+      - ./graficas:/output
+    networks:
+      - dask-net
+
+  grafica-2:
+    build: .
+    container_name: secop-grafica-2
+    restart: "no"
+    command: python scripts/pregunta_2.py
+    depends_on:
+      - dask-scheduler
+      - dask-worker-1
+      - dask-worker-2
+      - dask-worker-3
+    volumes:
+      - datos:/datos
+      - ./graficas:/output
+    networks:
+      - dask-net
+
+  grafica-3:
+    build: .
+    container_name: secop-grafica-3
+    restart: "no"
+    command: python scripts/pregunta_3.py
+    depends_on:
+      - dask-scheduler
+      - dask-worker-1
+      - dask-worker-2
+      - dask-worker-3
+    volumes:
+      - datos:/datos
+      - ./graficas:/output
+    networks:
+      - dask-net
+
+  grafica-4:
+    build: .
+    container_name: secop-grafica-4
+    restart: "no"
+    command: python scripts/pregunta_4.py
+    depends_on:
+      - dask-scheduler
+      - dask-worker-1
+      - dask-worker-2
+      - dask-worker-3
+    volumes:
+      - datos:/datos
+      - ./graficas:/output
+    networks:
+      - dask-net
+
+  grafica-5:
+    build: .
+    container_name: secop-grafica-5
+    restart: "no"
+    command: python scripts/pregunta_5.py
+    depends_on:
+      - dask-scheduler
+      - dask-worker-1
+      - dask-worker-2
+      - dask-worker-3
+    volumes:
+      - datos:/datos
+      - ./graficas:/output
+    networks:
+      - dask-net
+
+  grafica-6:
+    build: .
+    container_name: secop-grafica-6
+    restart: "no"
+    command: python scripts/pregunta_6.py
+    depends_on:
+      - dask-scheduler
+      - dask-worker-1
+      - dask-worker-2
+      - dask-worker-3
+    volumes:
+      - datos:/datos
+      - ./graficas:/output
+    networks:
+      - dask-net
+
+
+  grafica-7:
+    build: .
+    container_name: secop-grafica-7
+    restart: "no"
+    command: python scripts/pregunta_7.py
+    depends_on:
+      - dask-scheduler
+      - dask-worker-1
+      - dask-worker-2
+      - dask-worker-3
+    volumes:
+      - datos:/datos
+      - ./graficas:/output
+    networks:
+      - dask-net
+
+  grafica-8:
+    build: .
+    container_name: secop-grafica-8
+    restart: "no"
+    command: python scripts/pregunta_8.py
+    depends_on:
+      - dask-scheduler
+      - dask-worker-1
+      - dask-worker-2
+      - dask-worker-3
+    volumes:
+      - datos:/datos
+      - ./graficas:/output
+    networks:
+      - dask-net
+
+  grafica-9:
+    build: .
+    container_name: secop-grafica-9
+    restart: "no"
+    command: python scripts/pregunta_9.py
+    depends_on:
+      - dask-scheduler
+      - dask-worker-1
+      - dask-worker-2
+      - dask-worker-3
+    volumes:
+      - datos:/datos
+      - ./graficas:/output
+    networks:
+      - dask-net
+
+  grafica-10:
+    build: .
+    container_name: secop-grafica-10
+    restart: "no"
+    command: python scripts/pregunta_10.py
+    depends_on:
+      - dask-scheduler
+      - dask-worker-1
+      - dask-worker-2
+      - dask-worker-3
+    volumes:
+      - datos:/datos
+      - ./graficas:/output
+    networks:
+      - dask-net
+
+  dask-scheduler:
+    image: ghcr.io/dask/dask:latest
+    container_name: dask-scheduler
+    command: dask scheduler
+    ports:
+      - "8786:8786"   # puerto del scheduler (workers y app se conectan aquí)
+      - "8787:8787"   # dashboard web → abrir en http://localhost:8787
+    volumes:
+      - datos:/datos
+    networks:
+      - dask-net
+
+  dask-worker-1:
+    image: ghcr.io/dask/dask:latest
+    container_name: dask-worker-1
+    command: dask worker tcp://dask-scheduler:8786 --nthreads 2 --memory-limit 3GB
+    depends_on:
+      - dask-scheduler
+    volumes:
+      - datos:/datos
+    networks:
+      - dask-net
+
+  dask-worker-2:
+    image: ghcr.io/dask/dask:latest
+    container_name: dask-worker-2
+    command: dask worker tcp://dask-scheduler:8786 --nthreads 2 --memory-limit 3GB
+    depends_on:
+      - dask-scheduler
+    volumes:
+      - datos:/datos
+    networks:
+      - dask-net
+
+  dask-worker-3:
+    image: ghcr.io/dask/dask:latest
+    container_name: dask-worker-3
+    command: dask worker tcp://dask-scheduler:8786 --nthreads 2 --memory-limit 3GB
+    depends_on:
+      - dask-scheduler
+    volumes:
+      - datos:/datos
+    networks:
+      - dask-net
+
+  app:
+    build: .
+    container_name: secop-app
+    depends_on:
+      - dask-scheduler
+      - dask-worker-1
+      - dask-worker-2
+      - dask-worker-3
+    volumes:
+      - datos:/datos
+    networks:
+      - dask-net
+
+volumes:
+  datos:
+
+networks:
+  dask-net:
+    driver: bridge
+
+

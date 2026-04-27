@@ -1,0 +1,14 @@
+# Datos pesados
+graficas/*.png
+secop_limpio.parquet/
+datos/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+
+# VSC
+.vscode/
