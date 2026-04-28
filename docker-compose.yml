@@ -209,6 +209,7 @@ services:
   app:
     build: .
     container_name: secop-app
+    command: python pipeline.py
     depends_on:
       - dask-scheduler
       - dask-worker-1
@@ -225,5 +226,3 @@ volumes:
 networks:
   dask-net:
     driver: bridge
-
-
