@@ -176,7 +176,7 @@ services:
   dask-worker-1:
     image: ghcr.io/dask/dask:latest
     container_name: dask-worker-1
-    command: dask worker tcp://dask-scheduler:8786 --nthreads 2 --memory-limit 3GB
+    command: dask worker tcp://dask-scheduler:8786 --nthreads 2 --memory-limit 5GB
     depends_on:
       - dask-scheduler
     volumes:
@@ -187,7 +187,7 @@ services:
   dask-worker-2:
     image: ghcr.io/dask/dask:latest
     container_name: dask-worker-2
-    command: dask worker tcp://dask-scheduler:8786 --nthreads 2 --memory-limit 3GB
+    command: dask worker tcp://dask-scheduler:8786 --nthreads 2 --memory-limit 5GB
     depends_on:
       - dask-scheduler
     volumes:
@@ -198,7 +198,7 @@ services:
   dask-worker-3:
     image: ghcr.io/dask/dask:latest
     container_name: dask-worker-3
-    command: dask worker tcp://dask-scheduler:8786 --nthreads 2 --memory-limit 3GB
+    command: dask worker tcp://dask-scheduler:8786 --nthreads 2 --memory-limit 5GB
     depends_on:
       - dask-scheduler
     volumes:
@@ -209,6 +209,7 @@ services:
   app:
     build: .
     container_name: secop-app
+    command: python pipeline.py
     depends_on:
       - dask-scheduler
       - dask-worker-1

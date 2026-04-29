@@ -81,10 +81,9 @@ docker compose down
 
 
 ###### PASOS PARA LA SEGUNDA EJECUCION #########
-docker compose up -d
+docker compose up -d # si o si
 docker compose logs -f app
-docker cp secop-app:/datos/secop_limpio.parquet ./secop_limpio.parquet
-docker cp secop-app:/datos/secop_chunks ./secop_chunks
+
 docker compose down
 
 
