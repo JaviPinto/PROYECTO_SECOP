@@ -26,13 +26,17 @@ print(client)
 ddf = dd.read_parquet(
     PARQUET,
     engine="pyarrow",
-    columns=["departamento_entidad", "valor_total_adjudicacion"],
+    columns=["departamento_entidad", "valor_total_adjudicacion","adjudicado","estado_del_procedimiento", "estado_resumen"],
 )
 
 # ── 3. Filtrar y agrupar (lazy) ──────────────────────────────
 ddf_filtrado = ddf[
     ddf["departamento_entidad"].notnull() &
-    (ddf["valor_total_adjudicacion"] > 0)
+    ddf["valor_total_adjudicacion"].notnull() &
+    (ddf["valor_total_adjudicacion"] > 0) &
+    (ddf["adjudicado"] == "Si") &
+    (ddf["estado_del_procedimiento"] == "SELECCIONADO") &
+    (ddf["estado_resumen"] == "Adjudicado")
 ]
 
 print("Ejecutando compute()...")

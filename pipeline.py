@@ -1,5 +1,5 @@
 # ============================================================
-# SECOP — Pipeline con Dask distribuido
+# SECOP — Lectura y limpieza con Dask distribuido
 # Conecta al scheduler Dask que corre en Docker
 # ============================================================
 
@@ -10,7 +10,7 @@ import numpy as np
 import requests
 import dask.dataframe as dd
 import pandas as pd
-from io import StringIO
+from io import StringIO #Convierte el texto de la respuesta HTTP en un archivo legible por pandas
 from warnings import filterwarnings
 from dask.distributed import Client
 

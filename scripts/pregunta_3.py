@@ -27,6 +27,9 @@ ddf = dd.read_parquet(
         "mes_publicacion_proceso",
         "tipo_de_contrato",
         "valor_total_adjudicacion",
+        "adjudicado",
+        "estado_del_procedimiento",
+        "estado_resumen"
     ],
 )
 
@@ -35,7 +38,11 @@ ddf = ddf[
     ddf["año_publicacion_proceso"].notnull() &
     ddf["mes_publicacion_proceso"].notnull() &
     ddf["tipo_de_contrato"].notnull() &
-    (ddf["valor_total_adjudicacion"] > 0)
+    ddf["valor_total_adjudicacion"].notnull() &
+    (ddf["valor_total_adjudicacion"] > 0) &
+    (ddf["adjudicado"] == "Si") &
+    (ddf["estado_del_procedimiento"] == "SELECCIONADO") &
+    (ddf["estado_resumen"] == "Adjudicado")
 ]
 
 # ── 4. Top 3 tipos de contrato — compute() auxiliar ──────────

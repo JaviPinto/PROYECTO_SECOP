@@ -70,12 +70,15 @@ docker compose up grafica-1
 # 23. Verificar que los workers están listos
 Abre el navegador en http://localhost:8787.
 
+# 24. Ver los csv en el volumen datos de docker 
+docker run --rm -v proyecto_secop_datos:/datos alpine ls /datos/secop_chunks
 
 ###### PASOS PARA LA PRIMERA VEZ #########
 docker compose up --build
 http://localhost:8787
 docker compose logs -f app
 docker cp secop-app:/datos/secop_limpio.parquet ./secop_limpio.parquet
+
 docker compose down
 
 
@@ -83,7 +86,12 @@ docker compose down
 ###### PASOS PARA LA SEGUNDA EJECUCION #########
 docker compose up -d # si o si
 docker compose logs -f app
+<<<<<<< Updated upstream
 
+=======
+docker cp secop-app:/datos/secop_limpio.parquet ./secop_limpio.parquet
+docker cp secop-app:/datos/secop_chunks ./secop_chunks # Para guardar los csv en la carpeta del proyecto
+>>>>>>> Stashed changes
 docker compose down
 
 
