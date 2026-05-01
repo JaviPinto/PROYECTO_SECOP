@@ -1,5 +1,5 @@
 # Datos pesados
-graficas/*.png
+#graficas/*.png
 secop_limpio.parquet/
 datos/
 
