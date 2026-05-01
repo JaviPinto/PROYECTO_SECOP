@@ -4,3 +4,4 @@ pyarrow
 requests
 numpy
 matplotlib
+seaborn
