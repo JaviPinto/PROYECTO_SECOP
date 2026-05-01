@@ -11,7 +11,7 @@ warnings.filterwarnings("ignore")
 
 DASK_SCHEDULER = "tcp://dask-scheduler:8786"
 PARQUET        = "/datos/secop_limpio.parquet"
-OUTPUT_PNG     = "/output/variabilidad_tipo_contrato.png"
+OUTPUT_PNG     = "/output/pregunta_2_variabilidad_tipo_contrato.png"
 
 # ── 1. Conectar al cluster ───────────────────────────────────
 print("Conectando al cluster Dask...")
@@ -33,8 +33,7 @@ ddf = ddf[
     (ddf["valor_total_adjudicacion"] > 0) &
     (ddf["adjudicado"] == "Si") &
     (ddf["estado_del_procedimiento"] == "SELECCIONADO") &
-    (ddf["estado_resumen"] == "Adjudicado") &
-    (ddf["estado_de_apertura_del_proceso"] == "Cerrado")
+    (ddf["estado_resumen"] == "Adjudicado")
 ]
 
 # ── 4. Agrupar y compute() ───────────────────────────────────
@@ -95,7 +94,7 @@ print(f"Menor dispersión : {menor_cv['Tipo de Contrato']}  (CV = {menor_cv['CV'
 conclusion_mayor = (
     f"El tipo '{mayor_cv['Tipo de Contrato']}' tiene el CV más alto ({mayor_cv['CV']:.2f}), "
     f"lo que indica que los valores contratados son muy heterogéneos entre sí. "
-    f"Esto suele ocurrir porque esta modalidad agrupa contratos de naturaleza muy distinta "
+    f"Esta modalidad agrupa contratos de naturaleza muy distinta "
     f"(desde obras pequeñas hasta megaproyectos), sin un rango de valor uniforme."
 )
 print(f"\n→ {conclusion_mayor}")

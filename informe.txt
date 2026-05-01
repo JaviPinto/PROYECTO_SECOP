@@ -1,0 +1,92 @@
+INFORME: 
+    PROCESAMIENTO EN PARALELO MEDIANTE DASK Y DOCKER CON DATOS DEL SECOP II
+
+Integrantes:
+    Javier Ricardo Pinto Moreno jpintom@ucentral.edu.co
+    Guillermo Arley Leal Triana glealt@ucentral.edu.co
+    Ómar Santiago Cruz Gómez ocruzg@ucentral.edu.co
+
+    Universidad Central
+    Maestría en Analítica de Datos
+    Asignatura: Big Data 
+    Fecha: 1 de mayo de 2026
+
+# FINALIDAD DEL PROYECTO
+    Descargar, limpiar y analizar los registros de contratación pública colombiana disponibles en el portal SECOP II,
+    utilizando Dask para computación distribuida y Docker para la orquestación de contenedores, mediante el procesamiento
+    de cerca de 8.6 millones de contratos públicos para generar análisis estadísticos y visualizaciones.
+
+# ESTRUCTURA DEL PROYECTO
+
+    PROYECTO_SECOP/
+    ├── pipeline.py           ← Script de descarga y limpieza
+    ├── Dockerfile            ← Parametros de construcción de la app
+    ├── docker-compose.yml    ← Parametros para la orquestación de los contenedores
+    ├── requirements.txt      ← Dependencias python
+    ├── scripts/              ← Scripts para generar las gráficas y sus análisis
+    │   ├── pregunta1.py
+    │   ├── pregunta2.py
+    │   ├── ...
+    │   └── pregunta10.py
+    └── graficas/             ← Carpeta con las gráficas generadas
+    └── secop_limpio.parquet/ ← Carpeta con los archivos parquet descargados
+    └── .gitignore/ ← Archivos ignorados en los push de github
+    └── readme.txt/ ← Comandos de docker
+    └── readme_github.txt/ ← Comandos de github
+    └── informe.txt/ ← Informe con el resumen del proyecto realizado
+
+# CONTENEDORES Y VOLUMENES DOCKER
+
+    container_name: secop-grafica-1
+    container_name: secop-grafica-2
+    container_name: secop-grafica-3
+    container_name: secop-grafica-4
+    container_name: secop-grafica-5
+    container_name: secop-grafica-6
+    container_name: secop-grafica-7
+    container_name: secop-grafica-8
+    container_name: secop-grafica-9
+    container_name: secop-grafica-10
+    container_name: dask-scheduler
+    container_name: dask-worker-1
+    container_name: dask-worker-2
+    container_name: dask-worker-3
+    container_name: secop-app
+    volumes:
+        - datos:/datos
+        - ./graficas:/output
+
+# PARÁMETROS PARA LA DESCARGA Y LIMPIEZA EN PARALELO
+    CHUNK           = 50_000
+    TOTAL_FILAS     = 8_600_000
+    MAX_WORKERS     = 10
+    dask worker tcp://dask-scheduler:8786 --nthreads 2 --memory-limit 5GB
+
+# PROCESO DE LIMPIEZA
+
+    1. Normalización de texto en columnas clave. Eliminación de espacios y conversión a mayúsculas.(entidad, nombre_del_proveedor, estado_del_procedimiento, modalidad_de_contratacion)
+    2. Conversión de columnas numéricas (valor_total_adjudicacion, precio_base, duracion) de texto a float64, reemplazando valores no convertibles por 0.
+    3. Parseo de 11 columnas de fechas a formato datetime, manejando valores mal escritos o vacíos con errors='coerce'.
+    4 .Extracción de año y mes desde fecha_de_publicacion_del y fecha_adjudicacion como columnas auxiliares (año_publicacion_proceso, mes_publicacion_proceso, año_adjudicacion, mes_adjudicacion).
+    5. Conversión de duración a días unificando las unidades originales (días, meses, años).
+    6. Normalización del campo departamento_proveedor: aplicación del diccionario de correcciones (BOGOTA → BOGOTÁ D.C., ATLANTICO → ATLÁNTICO, etc.), eliminación de tildes y caracteres especiales como \xa0 mediante normalización NFKD.
+    7. Corrección de precios base negativos: los valores menores a cero se convierten a 0 y se registra la corrección en una columna indicadora correcion_precio_base.
+    8. Clasificación de contratos por duración en tres categorías: Corto (menos de 30 días), Mediano (entre 30 y 365 días) y Largo (más de 365 días).
+    9. Filtrado de contratos adjudicados:
+            ddf["departamento_entidad"].notnull() &
+            ddf["valor_total_adjudicacion"].notnull() &
+            (ddf["valor_total_adjudicacion"] > 0) &
+            (ddf["adjudicado"] == "Si") &
+            (ddf["estado_del_procedimiento"] == "SELECCIONADO") &
+            (ddf["estado_resumen"] == "Adjudicado")
+
+# INSTRUCCIONES PARA EL DESPLIEGUE
+
+    1. git clone https://github.com/JaviPinto/PROYECTO_SECOP.git ← Clonar repositorio
+    2. docker compose up --build -d ← Levantar todos los contenedores
+    3. http://localhost:8787     ← local host para seguimiento  del proceso
+    4. docker cp secop-app:/datos/secop_limpio.parquet ./secop_limpio.parquet ← Descarga de archivos parquet en servidor local
+    5. docker compose down ← Detener y eliminar contenedores. Apaga todo. Los datos del volumen quedan intactos
+
+# RESULTADOS:
+    Pueden ser consultados en la carpeta "graficas".

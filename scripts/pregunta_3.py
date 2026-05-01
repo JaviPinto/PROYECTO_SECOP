@@ -11,7 +11,7 @@ warnings.filterwarnings("ignore")
 
 DASK_SCHEDULER = "tcp://dask-scheduler:8786"
 PARQUET        = "/datos/secop_limpio.parquet"
-OUTPUT_PNG     = "/output/evolucion_mensual_contratacion.png"
+OUTPUT_PNG     = "/output/pregunta_3_evolucion_mensual_contratacion.png"
 
 # ── 1. Conectar ──────────────────────────────────────────────
 print("Conectando al cluster Dask...")
@@ -26,10 +26,7 @@ ddf = dd.read_parquet(
         "año_publicacion_proceso",
         "mes_publicacion_proceso",
         "tipo_de_contrato",
-        "valor_total_adjudicacion",
-        "adjudicado",
-        "estado_del_procedimiento",
-        "estado_resumen"
+        "valor_total_adjudicacion"
     ],
 )
 
@@ -38,12 +35,7 @@ ddf = ddf[
     ddf["año_publicacion_proceso"].notnull() &
     ddf["mes_publicacion_proceso"].notnull() &
     ddf["tipo_de_contrato"].notnull() &
-    ddf["valor_total_adjudicacion"].notnull() &
-    (ddf["valor_total_adjudicacion"] > 0) &
-    (ddf["adjudicado"] == "Si") &
-    (ddf["estado_del_procedimiento"] == "SELECCIONADO") &
-    (ddf["estado_resumen"] == "Adjudicado")
-]
+    ddf["valor_total_adjudicacion"].notnull() ]
 
 # ── 4. Top 3 tipos de contrato — compute() auxiliar ──────────
 print("Calculando top 3 tipos de contrato...")

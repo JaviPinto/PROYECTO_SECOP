@@ -86,12 +86,8 @@ docker compose down
 ###### PASOS PARA LA SEGUNDA EJECUCION #########
 docker compose up -d # si o si
 docker compose logs -f app
-<<<<<<< Updated upstream
-
-=======
 docker cp secop-app:/datos/secop_limpio.parquet ./secop_limpio.parquet
 docker cp secop-app:/datos/secop_chunks ./secop_chunks # Para guardar los csv en la carpeta del proyecto
->>>>>>> Stashed changes
 docker compose down
 
 
